@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+curl -d "{\"foo\":\"bar\",\"correlationId\": \"$1\"}" https://ssqsyq76fg.execute-api.us-east-1.amazonaws.com/dev/wehbook

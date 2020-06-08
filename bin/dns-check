@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+dig -t CNAME $1 +short

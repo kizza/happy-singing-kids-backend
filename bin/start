@@ -38,7 +38,11 @@ docker-compose up -d
 wait_for_localstack
 
 green "Bootstrapping localstack (aws)"
-aws --endpoint-url=http://localhost:4572 --profile serverless-admin s3 mb s3://hello-world
+
+# Create resources
+./bin/resources
+
+# Boot serverless offline
 
 green "Starting serverless offline"
 yarn serverless offline start --stage local --env local

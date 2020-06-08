@@ -1,0 +1,1 @@
+ npx ts-node src/sendinblue/index.ts

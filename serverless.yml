@@ -1,4 +1,4 @@
-# Welcome to Serverless!
+# Wel4569come to Serverless!
 #
 # This file is the main config file for your service.
 # It's very minimal at this point and uses default values.
@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: serverless-hello-world
+service: happy-singing-kids
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
@@ -21,12 +21,29 @@ service: serverless-hello-world
 # frameworkVersion: "=X.X.X"
 
 plugins:
+  - serverless-dotenv-plugin
+  - serverless-domain-manager
   - serverless-webpack
   - serverless-localstack
+  - serverless-dynamodb-local
   - serverless-offline
 
 custom:
   bucket: hello-world
+  customDomain:
+    domainName: ${env:DOMAIN}
+    createRoute53Record: true
+  dynamodb:
+    stages:
+      - local
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
   localstack:
     stages:
       - local
@@ -39,6 +56,31 @@ provider:
   name: aws
   profile: serverless-admin
   runtime: nodejs12.x
+  tage: dev
+  environment:
+    CUSTOMER_TABLE: "${self:service}-db-${opt:stage, self:provider.stage}"
+    FILES_BUCKET_NAME: "${self:service}-files-${opt:stage, self:provider.stage}"
+    SALT: "salt"
+    # CANDIDATE_EMAIL_TABLE: "candidate-email-${opt:stage, self:provider.stage}"
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - "sns:Publish"
+      Resource:
+        - ${env:PAYMENT_TOPIC_ARN}
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - s3:GetObject
+        # Resource: arn:aws:s3:::${cf:${self:custom.infraStack}.PhotosBucket}*
+      Resource:
+        - ${env:FILES_BUCKET_ARN}/*
 
 # you can overwrite defaults here
 #  stage: dev
@@ -60,10 +102,6 @@ provider:
 #            - "Ref" : "ServerlessDeploymentBucket"
 #            - "/*"
 
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
-
 # you can add packaging information here
 #package:
 #  include:
@@ -74,12 +112,164 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: src/functions/hello.world
+
+# Meow meow meow meow
+
+  home:
+    handler: src/functions/home.handle
     events:
       - http:
-          path: /hello-world
+          path: /
           method: get
+
+  processPaymentLive:
+    handler: src/functions/processPaymentLive.handle
+    environment:
+      stripeSecretKey: ${env:STRIPE_SECRET_KEY}
+      stripeWebhookSecret: ${env:STRIPE_WEBHOOK_SECRET}
+      sendInBlueApiKey: ${env:SENDINBLUE_API_KEY}
+      websiteUrl: ${env:WEBSITE_URL}
+    events:
+      - http:
+          path: /live
+          method: post
+          cors: true
+
+  dashboard:
+    handler: src/functions/getCustomerDashboard.handle
+    environment:
+      stripeSecretKey: ${env:STRIPE_SECRET_KEY}
+      websiteUrl: ${env:WEBSITE_URL}
+      apiUrl: ${env:API_URL}
+    events:
+      - http:
+          path: /dashboard/{token}
+          method: get
+          cors: true
+
+  download:
+    handler: src/functions/download.handle
+    environment:
+      stripeSecretKey: ${env:STRIPE_SECRET_KEY}
+      websiteUrl: ${env:WEBSITE_URL}
+    events:
+      - http:
+          path: /download/{token}/{key}
+          method: get
+          cors: true
+
+
+# Spike
+
+  spikePut:
+    handler: src/functions/spike.handlePut
+    events:
+      - http:
+          path: /spike/put
+          method: get
+
+  spikeQuery:
+    handler: src/functions/spike.handleQuery
+    events:
+      - http:
+          path: /spike/query
+          method: get
+
+  spikeScan:
+    handler: src/functions/spike.handleScan
+    events:
+      - http:
+          path: /spike/scan
+          method: get
+
+
+# Stripe integration (frontend)
+
+  getCatalogue:
+    handler: src/functions/getCatalogue.handle
+    environment:
+      stripeSecretKey: ${env:STRIPE_SECRET_KEY}
+      websiteUrl: ${env:WEBSITE_URL}
+    events:
+      - http:
+          path: /catalogue
+          method: get
+          cors: true
+
+  createCheckoutSession:
+    handler: src/functions/createCheckoutSession.handle
+    environment:
+      stripeSecretKey: ${env:STRIPE_SECRET_KEY}
+      websiteUrl: ${env:WEBSITE_URL}
+    events:
+      - http:
+          path: /sessions
+          method: post
+          cors: true
+
+  retrieveCheckoutSession:
+    handler: src/functions/retrieveCheckoutSession.handle
+    environment:
+      stripeSecretKey: ${env:STRIPE_SECRET_KEY}
+      websiteUrl: ${env:WEBSITE_URL}
+    events:
+      - http:
+          path: /session/{sessionId}
+          method: get
+          cors: true
+
+# Stripe integration (backend)
+
+  paymentWebhook:
+    handler: src/functions/paymentWebhook.handle
+    environment:
+      stripeSecretKey: ${env:STRIPE_SECRET_KEY}
+      stripeWebhookSecret: ${env:STRIPE_WEBHOOK_SECRET}
+      # awsAccessKeyId: ${env:AWS_ACCESS_KEY_ID}
+      # awsSecretAccessKey: ${env:AWS_SECRET_ACCESS_KEY}
+    events:
+      - http:
+          path: /webhook
+          method: post
+
+  processPaymentQueue:
+    handler: src/functions/processPaymentQueue.handle
+    reservedConcurrency: 1
+    environment:
+      stripeSecretKey: ${env:STRIPE_SECRET_KEY}
+      stripeWebhookSecret: ${env:STRIPE_WEBHOOK_SECRET}
+      sendInBlueApiKey: ${env:SENDINBLUE_API_KEY}
+      websiteUrl: ${env:WEBSITE_URL}
+    events:
+      - sqs:
+          arn: ${env:PAYMENT_QUEUE_ARN}
+          batchSize: 10
+
+resources:
+  Resources:
+    customerTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.CUSTOMER_TABLE}
+        AttributeDefinitions:
+          - AttributeName: internalId
+            AttributeType: S
+          - AttributeName: purchaseId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: internalId
+            KeyType: HASH
+          - AttributeName: purchaseId
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    # songsBucket:
+    #   Type: AWS::S3::Bucket
+    #   Properties:
+    #     BucketName: ${self:provider.environment.FILES_BUCKET_NAME}
+    #     AccessControl: Private
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

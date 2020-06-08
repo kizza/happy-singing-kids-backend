@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+npx serverless invoke local --function processPaymentQueue --path fixtures/checkout_session_completed.json

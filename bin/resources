@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+#
+# Helpers
+#
+
+YELLOW=$(tput setaf 3)
+GREEN=$(tput setaf 2)
+RESET=$(tput sgr0)
+
+green() {
+  echo "${GREEN}$1${RESET}"
+}
+
+yellow() {
+  echo "${YELLOW}$1${RESET}"
+}
+
+#
+# Resources
+#
+
+# yellow "Creating bucket..."
+# aws --endpoint-url=http://localhost:4572 --profile serverless-admin \
+#   s3 mb s3://hello-world
+
+# yellow "Creating sns topic..."
+# aws --endpoint-url=http://localhost:4575 --profile serverless-admin --region us-east-1 \
+#   sns create-topic --name test-topic
+
+yellow "Creating queue..."
+QUEUE_URL=$(aws --endpoint-url=http://localhost:4576 --profile serverless-admin --region us-east-1 \
+  sqs create-queue --queue-name test-queue | jq .QueueUrl)
+
+echo $QUEUE_URL
+
+# aws --endpoint-url=http://localhost:4576 --profile serverless-admin --region us-east-1 \
+#   sqs get-queue-attributes --queue-url $QUEUE_URL --attribute-names All
+
+# QUEUE_ARN=$("aws --endpoint-url=http://localhost:4576 --profile serverless-admin --region us-east-1 \
+#   sqs get-queue-attributes --queue-url $QUEUE_URL --attribute-names All" | jq)
+# echo QUEUE_ARN
+
+aws --endpoint-url=http://localhost:4572 --profile serverless-admin --region us-east-1 \
+  sns subscribe --topic-arn arn:aws:sqs:us-east-1:000000000000:test-queue --protocol sqs

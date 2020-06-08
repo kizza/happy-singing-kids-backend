@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# You'll need to have run
+# brew install stripe/stripe-cli/stripe
+# stripe login
+
+STRIPE_WEBHOOK_SECRET=$1 stripe trigger checkout.session.completed
