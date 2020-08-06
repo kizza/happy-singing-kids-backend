@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+curl -d '{"foo": "bar"}' https://ssqsyq76fg.execute-api.us-east-1.amazonaws.com/dev/payment | jq .
+

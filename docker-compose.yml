@@ -4,12 +4,12 @@ services:
     image: localstack/localstack
     ports:
       - "4567-4597:4567-4597"
-      - "${PORT_WEB_UI-8080}:${PORT_WEB_UI-8080}"
+      - "${PORT_WEB_UI-5000}:${PORT_WEB_UI-5000}"
     environment:
-      - SERVICES=s3,apigateway,lambda
+      - SERVICES=s3,apigateway,lambda,sns,sqs
       - DEBUG=1
       - DATA_DIR=${DATA_DIR- }
-      - PORT_WEB_UI=${PORT_WEB_UI- }
+      - PORT_WEB_UI=${PORT_WEB_UI-5000}
       - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
       - KINESIS_ERROR_PROBABILITY=${KINESIS_ERROR_PROBABILITY- }
       - DOCKER_HOST=unix:///var/run/docker.sock

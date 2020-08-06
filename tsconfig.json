@@ -3,6 +3,7 @@
     "allowJs": true,
     "lib": ["es2015"],
     "moduleResolution": "node",
+    "esModuleInterop":true,
     "outDir": ".build",
     "preserveConstEnums": true,
     "rootDir": "./",

@@ -1,0 +1,8 @@
+{
+  "Records": [
+    {
+      "message": "Here is the records",
+      "body": "{ \"foo\": \"bar\" }"
+    }
+  ]
+}
