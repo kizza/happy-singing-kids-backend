@@ -15,7 +15,10 @@ const files: Record<ProductId, BucketKey> = {
   prod_HmVWh5V6yJyCAG: "Happy Singing Kids.zip",
 };
 
-export const getFilename = (productId: ProductId) => files[productId];
+const getFile = (productId: ProductId) =>
+  files[productId] || `Unknown ${productId}`;
+
+export const getFilename = getFile;
 
 export const getFiletype = (productId: ProductId) =>
-  files[productId].indexOf(".mp3") >= 0 ? "audio" : "download";
+  getFile(productId).indexOf(".mp3") >= 0 ? "audio" : "download";
