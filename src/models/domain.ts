@@ -3,6 +3,7 @@ import { CustomerPurchase, HydratedCheckoutSession } from ".";
 import { lineItemsAsDisplayItems } from "../stripe/price";
 import { DisplayItem } from "../stripe/catalogue";
 import { apiUrl } from "../util";
+import { getFiletype } from "../domain/mp3s";
 
 export const deriveInternalId = (email: string) =>
   v5(email, "a3980a6a-c2f5-4ba1-89eb-335abf31c844");
@@ -32,7 +33,11 @@ export const mapCheckoutSessionToPurchase = (
 export interface LabelItem {
   productId: string;
   name: string;
-  url?: string;
+}
+
+export interface FileItem extends LabelItem {
+  url: string;
+  filetype: string;
 }
 
 export interface Dashboard {
@@ -65,9 +70,10 @@ export const reducePurchases = (purchases: CustomerPurchase[]) => {
   }, initialState);
 };
 
-const assignUrl = (token: string) => (item: LabelItem) => ({
+const assignUrl = (token: string) => (item: LabelItem): FileItem => ({
   ...item,
   url: apiUrl(`/download/${token}/${item.productId}`),
+  filetype: getFiletype(item.productId),
   // url: websiteUrl(`/download/${token}/${item.id}`),
 });
 
@@ -78,7 +84,7 @@ export const assignUrls = <T extends { items: (LabelItem | DisplayItem)[] }>(
   return {
     ...dashboard,
     items: items.map(assignUrl(token)),
-  } as T;
+  } as T & { items: FileItem[] };
 };
 
 export const asDashboard = (token: string) => (purchases: CustomerPurchase[]) =>
