@@ -43,7 +43,7 @@ describe("Returning a customer dashboard", () => {
           createdAt: 1,
           name: name,
           email: email,
-          items: items,
+          items: [...items, items[1]], // Add a duplicate item to be filtered out
         },
       ];
 
@@ -89,7 +89,6 @@ describe("Returning a customer dashboard", () => {
       const name = "foo bar";
       const email = "foo@example.com";
       const internalId = v5(email, "a3980a6a-c2f5-4ba1-89eb-335abf31c844");
-
       const inventoryMock = jest
         .spyOn(_mp3s, "getFiletype")
         .mockImplementation(() => "audio");
@@ -147,7 +146,6 @@ describe("Returning a customer dashboard", () => {
 
       expect(response.statusCode).toEqual(200);
       expect(JSON.parse(response.body)).toMatchObject(expectedResult);
-
       inventoryMock.mockRestore();
       dynamoMock.mockRestore();
     });

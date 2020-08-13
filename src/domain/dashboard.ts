@@ -34,9 +34,25 @@ export const fanOutPacks = (dashboard: Dashboard) => {
   return fannedOut;
 };
 
+export const filterDuplicates = (dashboard: Dashboard) => {
+  const exists = (items: LabelItem[], find: LabelItem) =>
+    !!items.find(each => each.productId === find.productId);
+
+  const filtered = {
+    ...dashboard,
+    items: dashboard.items.reduce(
+      (acc, each) => (exists(acc, each) ? acc : [...acc, each]),
+      [] as LabelItem[]
+    ),
+  };
+
+  return filtered;
+};
+
 export const retrieveDashboard = (token: string) =>
   Promise.resolve(fixedDashboards[token] || loadDashboard(token))
     .then(fanOutPacks)
+    .then(filterDuplicates)
     .then(assignUrls(token));
 
 const loadDashboard = (token: string) =>
