@@ -6,7 +6,7 @@ export const inventory: Record<string, LabelItem[]> = {
   [HAPPY_PACK_1]: [
     {
       productId: "prod_HOdRUkZgB5CFmH",
-      name: "Uh oh spaghetti oh",
+      name: "Uh oh spaghetti-oh",
     },
     {
       productId: "prod_HRh1JWoeQ6Etnj",
