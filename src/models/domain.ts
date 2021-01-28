@@ -72,7 +72,7 @@ export const reducePurchases = (purchases: CustomerPurchase[]) => {
 
 const assignUrl = (token: string) => (item: LabelItem): FileItem => ({
   ...item,
-  url: apiUrl(`/download/${token}/${item.productId}`),
+  url: apiUrl(`download/${token}/${item.productId}`),
   filetype: getFiletype(item.productId),
   // url: websiteUrl(`/download/${token}/${item.id}`),
 });

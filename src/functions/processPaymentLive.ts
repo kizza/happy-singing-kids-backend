@@ -14,7 +14,7 @@ const parseInput = (event: APIGatewayEvent): Promise<string> =>
   });
 
 const buildRedirectUrl = (purchase: CustomerPurchase) => ({
-  redirectToUrl: websiteUrl(`/thankyou/${purchase.internalId}`),
+  redirectToUrl: websiteUrl(`thankyou/${purchase.internalId}`),
 });
 
 export const handle = async (

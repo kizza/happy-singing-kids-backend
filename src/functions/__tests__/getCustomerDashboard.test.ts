@@ -65,7 +65,7 @@ describe("Returning a customer dashboard", () => {
         items: items.map(each => ({
           name: each.name,
           productId: each.productId,
-          url: `undefined/download/${internalId}/${each.productId}`,
+          url: `undefineddownload/${internalId}/${each.productId}`,
           filetype: "audio",
         })),
       };
@@ -133,7 +133,7 @@ describe("Returning a customer dashboard", () => {
         items: inventory[HAPPY_PACK_1].map(each => ({
           name: each.name,
           productId: each.productId,
-          url: `undefined/download/${internalId}/${each.productId}`,
+          url: `undefineddownload/${internalId}/${each.productId}`,
           filetype: "audio",
         })),
       };

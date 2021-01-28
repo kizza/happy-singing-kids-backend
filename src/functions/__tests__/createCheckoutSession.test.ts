@@ -34,9 +34,9 @@ describe("Creating checkout session", () => {
               expect(metadata).toEqual({ description: dto.description });
               expect(line_items).toEqual(lineItems);
               expect(success_url).toContain(
-                `/success?session_id={CHECKOUT_SESSION_ID}`
+                `success?session_id={CHECKOUT_SESSION_ID}`
               );
-              expect(cancel_url).toContain("/cancel");
+              expect(cancel_url).toContain("cancel");
 
               return Promise.resolve({
                 id: checkoutSessionId,

@@ -117,7 +117,7 @@ describe("Processing live payments", () => {
       const response = await handle(gatewayEvent);
       expect(response.statusCode).toEqual(200);
       expect(JSON.parse(response.body).redirectToUrl).toEqual(
-        websiteUrl(`/thankyou/${internalId}`)
+        websiteUrl(`thankyou/${internalId}`)
       );
     });
   });

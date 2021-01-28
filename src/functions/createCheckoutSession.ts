@@ -28,8 +28,8 @@ const createCheckoutSession = ({ description, items }: CreateSessionDto) =>
       payment_method_types: ["card"],
       line_items: items,
       mode: "payment",
-      success_url: `${process.env.websiteUrl}/purchase/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.websiteUrl}/cancel`,
+      success_url: `${process.env.websiteUrl}purchase/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.websiteUrl}cancel`,
     })
   );
 
