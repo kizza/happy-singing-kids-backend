@@ -3,8 +3,12 @@ services:
   localstack:
     image: localstack/localstack
     ports:
-      - "4567-4597:4567-4597"
+      - "4566:4566"
+      - "4571:4571"
       - "${PORT_WEB_UI-5000}:${PORT_WEB_UI-5000}"
+    # ports:
+    #   - "4567-4597:4567-4597"
+    #   - "${PORT_WEB_UI-5000}:${PORT_WEB_UI-5000}"
     environment:
       - SERVICES=s3,apigateway,lambda,sns,sqs
       - DEBUG=1

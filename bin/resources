@@ -29,7 +29,7 @@ yellow() {
 #   sns create-topic --name test-topic
 
 yellow "Creating queue..."
-QUEUE_URL=$(aws --endpoint-url=http://localhost:4576 --profile serverless-admin --region us-east-1 \
+QUEUE_URL=$(aws --endpoint-url=http://localhost:4566 --profile serverless-admin --region us-east-1 \
   sqs create-queue --queue-name test-queue | jq .QueueUrl)
 
 echo $QUEUE_URL
@@ -41,5 +41,6 @@ echo $QUEUE_URL
 #   sqs get-queue-attributes --queue-url $QUEUE_URL --attribute-names All" | jq)
 # echo QUEUE_ARN
 
-aws --endpoint-url=http://localhost:4572 --profile serverless-admin --region us-east-1 \
-  sns subscribe --topic-arn arn:aws:sqs:us-east-1:000000000000:test-queue --protocol sqs
+# yellow "Subscribing to queue..."
+# aws --endpoint-url=http://localhost:4566 --profile serverless-admin --region us-east-1 \
+#   sns subscribe --topic-arn arn:aws:sqs:us-east-1:000000000000:test-queue --protocol sqs

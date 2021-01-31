@@ -48,7 +48,6 @@ custom:
     stages:
       - local
     host: http://localhost
-    endpointFile: .localstack/endpoints.json
     lambda:
       mountCode: True
 
