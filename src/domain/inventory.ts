@@ -1,6 +1,6 @@
 import { LabelItem } from "../models/domain";
 
-export const HAPPY_PACK_1 = "prod_Hp727saqpOW9IU";
+export const HAPPY_PACK_1 = process.env.HAPPY_PACK_1!;
 
 export const inventory: Record<string, LabelItem[]> = {
   [HAPPY_PACK_1]: [
