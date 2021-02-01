@@ -16,7 +16,7 @@
   "dependencies": {
     "@types/uuid": "^8.0.0",
     "aws-sdk": "^2.686.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "crypto": "^1.0.1",
     "hashids": "^2.2.1",
     "serverless": "^1.66.0",
