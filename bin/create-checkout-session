@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# Invokes the createCheckoutSession
+# Returns cs_test_TOKEN
+
+sls invoke local --function createCheckoutSession --data '{"body": "{\"description\":\"Foo bar\",\"items\":[{\"price\":\"price_1HFSo4FbHwwHDg3DK1i4YblC\",\"quantity\":1}]}"}' | rg sk_test | awk '{print $4}'

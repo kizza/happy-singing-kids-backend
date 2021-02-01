@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# A binstub for calling localstack
+
+aws --endpoint-url=http://localhost:4566 --profile serverless-admin --region us-east-1 $1
